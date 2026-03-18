@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VueCode Academy — Test Application</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    .academy-banner {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      border-bottom: 2px solid #00ff9d;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .academy-banner .logo {
+      font-size: 18px;
+      font-weight: 700;
+      color: #00ff9d;
+      font-family: monospace;
+    }
+
+    .academy-banner .badge {
+      background: #ff4444;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+
+    .academy-banner .description {
+      font-size: 13px;
+      color: #888;
+      margin-left: auto;
+    }
+
+    .warning-box {
+      background: #1a0a0a;
+      border: 1px solid #ff4444;
+      border-left: 4px solid #ff4444;
+      margin: 20px;
+      padding: 16px 20px;
+      border-radius: 8px;
+    }
+
+    .warning-box h3 {
+      color: #ff4444;
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .warning-box ul {
+      list-style: none;
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .warning-box ul li::before {
+      content: "⚠️ ";
+    }
+
+    .warning-box ul li {
+      margin: 4px 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 16px;
+      color: #00ff9d;
+      margin-bottom: 16px;
+      font-family: monospace;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input, textarea {
+      width: 100%;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #e0e0e0;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #00ff9d;
+    }
+
+    button {
+      background: #00ff9d;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover { opacity: 0.9; }
+
+    button.secondary {
+      background: #222;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      margin-left: 8px;
+    }
+
+    .response-box {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #00ff9d;
+      margin-top: 12px;
+      min-height: 60px;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid #333;
+      background: #111;
+      color: #888;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: #00ff9d;
+      color: #0a0a0a;
+      border-color: #00ff9d;
+      font-weight: 700;
+    }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .note-item {
+      background: #0a0a0a;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .note-item h4 { color: #e0e0e0; font-size: 14px; }
+    .note-item p { color: #888; font-size: 12px; margin-top: 4px; }
+    
+    .note-item .delete-btn {
+      background: #ff4444;
+      color: white;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .token-display {
+      background: #0a0a0a;
+      border: 1px solid #00ff9d33;
+      border-radius: 6px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #00ff9d;
+      word-break: break-all;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .vuln-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .vuln-tag {
+      background: #1a0a0a;
+      border: 1px solid #ff444433;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #ff6666;
+      font-family: monospace;
+    }
+
+    .status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111;
+      border-top: 1px solid #222;
+      padding: 8px 20px;
+      font-size: 12px;
+      color: #888;
+      display: flex;
+      gap: 20px;
+    }
+
+    .status-bar span { color: #00ff9d; }
+  </style>
+</head>
+<body>
+
+  <div class="academy-banner">
+    <div class="logo">&gt;_ VueCode</div>
+    <div class="badge">ACADEMY</div>
+    <div class="description">🎓 Intentionally Vulnerable App — For Educational Purposes Only</div>
+  </div>
+
+  <div class="warning-box" style="margin: 20px 20px 0;">
+    <h3>⚠️ VueCode Academy — Test Environment</h3>
+    <ul>
+      <li>This application contains intentional security vulnerabilities for learning purposes</li>
+      <li>DO NOT deploy this code in any production environment</li>
+      <li>Use this app to practice identifying issues with VueCode's analysis tools</li>
+      <li>All data is local and for demonstration only</li>
+    </ul>
+  </div>
+
+  <div class="container">
+
+    <div class="card" style="margin-top: 20px;">
+      <h2>// Vulnerabilities in this app</h2>
+      <p style="font-size: 13px; color: #888; margin-bottom: 12px;">
+        This app intentionally contains the following issues — can VueCode find them all?
+      </p>
+      <div class="vuln-list">
+        <div class="vuln-tag">SQL Injection (auth)</div>
+        <div class="vuln-tag">SQL Injection (search)</div>
+        <div class="vuln-tag">Hardcoded JWT Secret</div>
+        <div class="vuln-tag">Hardcoded API Keys</div>
+        <div class="vuln-tag">Plain Text Passwords</div>
+        <div class="vuln-tag">IDOR (notes access)</div>
+        <div class="vuln-tag">Mass Assignment</div>
+        <div class="vuln-tag">XSS (note content)</div>
+        <div class="vuln-tag">No Rate Limiting</div>
+        <div class="vuln-tag">Debug Endpoint</div>
+        <div class="vuln-tag">CORS Wildcard</div>
+        <div class="vuln-tag">N+1 Queries</div>
+        <div class="vuln-tag">No Pagination</div>
+        <div class="vuln-tag">Stack Traces Exposed</div>
+        <div class="vuln-tag">Root Docker User</div>
+        <div class="vuln-tag">Secrets in Dockerfile</div>
+        <div class="vuln-tag">.env Committed</div>
+        <div class="vuln-tag">CVE Dependencies</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('auth')">Authentication</div>
+      <div class="tab" onclick="switchTab('notes')">Notes</div>
+      <div class="tab" onclick="switchTab('admin')">Admin</div>
+      <div class="tab" onclick="switchTab('debug')">Debug</div>
+    </div>
+
+    <!-- AUTH TAB -->
+    <div class="tab-content active" id="tab-auth">
+      <div class="card">
+        <h2>// Login</h2>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="login-username" placeholder="Try: admin' OR '1'='1" value="admin">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="Try SQL injection in username" value="admin123">
+        </div>
+        <button onclick="login()">Login</button>
+        <div class="token-display" id="token-display"></div>
+        <div class="response-box" id="login-response"></div>
+      </div>
+
+      <div class="card">
+        <h2>// Register</h2>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="reg-username" placeholder="username">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label>Password (stored in plain text!)</label>
+          <input type="text" id="reg-password" placeholder="password — will be stored as-is">
+        </div>
+        <button onclick="register()">Register</button>
+        <div class="response-box" id="register-response"></div>
+      </div>
+
+      <div class="card">
+        <h2>// Get User by ID (no auth required!)</h2>
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="number" id="user-id" value="1">
+        </div>
+        <button onclick="getUser()">Get User Data</button>
+        <div class="response-box" id="user-response"></div>
+      </div>
+    </div>
+
+    <!-- NOTES TAB -->
+    <div class="tab-content" id="tab-notes">
+      <div class="card">
+        <h2>// Create Note</h2>
+        <div class="form-group">
+          <label>Title (XSS not sanitized!)</label>
+          <input type="text" id="note-title" placeholder="Try: <img src=x onerror=alert(1)>">
+        </div>
+        <div class="form-group">
+          <label>Content</label>
+          <textarea id="note-content" rows="3" placeholder="Note content..."></textarea>
+        </div>
+        <button onclick="createNote()">Create Note</button>
+        <div class="response-box" id="create-note-response"></div>
+      </div>
+
+      <div class="card">
+        <h2>// All Notes (includes private notes from ALL users!)</h2>
+        <button onclick="getNotes()">Load All Notes</button>
+        <div id="notes-list" style="margin-top: 12px;"></div>
+      </div>
+
+      <div class="card">
+        <h2>// Search Notes (SQL Injection!)</h2>
+        <div class="form-group">
+          <label>Search Query</label>
+          <input type="text" id="search-query" placeholder="Try: %' UNION SELECT * FROM users --">
+        </div>
+        <button onclick="searchNotes()">Search</button>
+        <div class="response-box" id="search-response"></div>
+      </div>
+    </div>
+
+    <!-- ADMIN TAB -->
+    <div class="tab-content" id="tab-admin">
+      <div class="card">
+        <h2>// Admin — Get All Users</h2>
+        <p style="font-size: 13px; color: #888; margin-bottom: 12px;">
+          Only checks if token is valid — not if user is admin!
+        </p>
+        <button onclick="getAdminUsers()">Get All Users (with passwords!)</button>
+        <div class="response-box" id="admin-response"></div>
+      </div>
+
+      <div class="card">
+        <h2>// Mass Assignment Attack</h2>
+        <p style="font-size: 13px; color: #888; margin-bottom: 12px;">
+          Update any user field — including role! Try setting role: "admin"
+        </p>
+        <div class="form-group">
+          <label>User ID</label>
+          <input type="number" id="update-user-id" value="2">
+        </div>
+        <div class="form-group">
+          <label>JSON Body (try adding "role": "admin")</label>
+          <textarea id="update-body" rows="4">{"username": "hacked", "role": "admin"}</textarea>
+        </div>
+        <button onclick="updateUser()">Update User</button>
+        <div class="response-box" id="update-response"></div>
+      </div>
+    </div>
+
+    <!-- DEBUG TAB -->
+    <div class="tab-content" id="tab-debug">
+      <div class="card">
+        <h2>// Debug Endpoint (exposes ALL secrets!)</h2>
+        <p style="font-size: 13px; color: #888; margin-bottom: 12px;">
+          This endpoint was left in production and exposes all configuration including secrets.
+        </p>
+        <button onclick="getDebug()">Call /api/debug</button>
+        <div class="response-box" id="debug-response"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="status-bar">
+    <div>VueCode Academy Test App</div>
+    <div>Token: <span id="token-status">Not logged in</span></div>
+    <div>API: <span>http://localhost:3000</span></div>
+    <div style="margin-left: auto;">🎓 <a href="https://vuecode.dev" style="color: #00ff9d;">vuecode.dev</a></div>
+  </div>
+
+  <script>
+    let authToken = null
+    const API = 'http://localhost:3000'
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'))
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'))
+      document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active')
+      document.getElementById(`tab-${tab}`).classList.add('active')
+    }
+
+    function showResponse(id, data) {
+      const el = document.getElementById(id)
+      el.style.display = 'block'
+      el.textContent = JSON.stringify(data, null, 2)
+    }
+
+    async function login() {
+      const username = document.getElementById('login-username').value
+      const password = document.getElementById('login-password').value
+      
+      try {
+        const res = await fetch(`${API}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        })
+        const data = await res.json()
+        showResponse('login-response', data)
+        
+        if (data.token) {
+          authToken = data.token
+          document.getElementById('token-status').textContent = `${data.user?.username} ✓`
+          document.getElementById('token-display').style.display = 'block'
+          document.getElementById('token-display').textContent = `Token: ${data.token}`
+        }
+      } catch (err) {
+        showResponse('login-response', { error: err.message })
+      }
+    }
+
+    async function register() {
+      const username = document.getElementById('reg-username').value
+      const email = document.getElementById('reg-email').value
+      const password = document.getElementById('reg-password').value
+
+      try {
+        const res = await fetch(`${API}/api/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        })
+        showResponse('register-response', await res.json())
+      } catch (err) {
+        showResponse('register-response', { error: err.message })
+      }
+    }
+
+    async function getUser() {
+      const id = document.getElementById('user-id').value
+      try {
+        const res = await fetch(`${API}/api/auth/user/${id}`)
+        showResponse('user-response', await res.json())
+      } catch (err) {
+        showResponse('user-response', { error: err.message })
+      }
+    }
+
+    async function createNote() {
+      const title = document.getElementById('note-title').value
+      const content = document.getElementById('note-content').value
+
+      try {
+        const res = await fetch(`${API}/api/notes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken || ''
+          },
+          body: JSON.stringify({ title, content, is_private: false })
+        })
+        showResponse('create-note-response', await res.json())
+      } catch (err) {
+        showResponse('create-note-response', { error: err.message })
+      }
+    }
+
+    async function getNotes() {
+      try {
+        const res = await fetch(`${API}/api/notes`, {
+          headers: { 'Authorization': authToken || '' }
+        })
+        const notes = await res.json()
+        const container = document.getElementById('notes-list')
+        
+        if (!Array.isArray(notes) || notes.length === 0) {
+          container.innerHTML = '<p style="color: #888; font-size: 13px;">No notes found</p>'
+          return
+        }
+
+        container.innerHTML = notes.map(note => `
+          <div class="note-item">
+            <div>
+              <h4>${note.title}</h4>
+              <p>${note.content} ${note.is_private ? '🔒 Private' : '🌐 Public'} — by user_id: ${note.user_id}</p>
+            </div>
+            <button class="delete-btn" onclick="deleteNote(${note.id})">Delete</button>
+          </div>
+        `).join('')
+      } catch (err) {
+        document.getElementById('notes-list').innerHTML = `<p style="color: #ff4444;">${err.message}</p>`
+      }
+    }
+
+    async function deleteNote(id) {
+      try {
+        const res = await fetch(`${API}/api/notes/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': authToken || '' }
+        })
+        await res.json()
+        getNotes()
+      } catch (err) {
+        alert(err.message)
+      }
+    }
+
+    async function searchNotes() {
+      const query = document.getElementById('search-query').value
+      try {
+        const res = await fetch(`${API}/api/notes/search/${encodeURIComponent(query)}`)
+        showResponse('search-response', await res.json())
+      } catch (err) {
+        showResponse('search-response', { error: err.message })
+      }
+    }
+
+    async function getAdminUsers() {
+      try {
+        const res = await fetch(`${API}/api/admin/users`, {
+          headers: { 'Authorization': authToken || '' }
+        })
+        showResponse('admin-response', await res.json())
+      } catch (err) {
+        showResponse('admin-response', { error: err.message })
+      }
+    }
+
+    async function updateUser() {
+      const id = document.getElementById('update-user-id').value
+      const body = JSON.parse(document.getElementById('update-body').value)
+
+      try {
+        const res = await fetch(`${API}/api/auth/user/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authToken || ''
+          },
+          body: JSON.stringify(body)
+        })
+        showResponse('update-response', await res.json())
+      } catch (err) {
+        showResponse('update-response', { error: err.message })
+      }
+    }
+
+    async function getDebug() {
+      try {
+        const res = await fetch(`${API}/api/debug`)
+        showResponse('debug-response', await res.json())
+      } catch (err) {
+        showResponse('debug-response', { error: err.message })
+      }
+    }
+  </script>
+
+</body>
+</html>

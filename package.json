@@ -1,0 +1,23 @@
+{
+  "name": "vuecode-academy-app",
+  "version": "1.0.0",
+  "description": "VueCode Academy - Intentionally vulnerable app for learning purposes",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "4.17.1",
+    "better-sqlite3": "7.4.3",
+    "jsonwebtoken": "8.5.1",
+    "bcryptjs": "2.4.3",
+    "lodash": "4.17.20",
+    "axios": "0.21.1",
+    "cors": "2.8.5",
+    "body-parser": "1.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.7"
+  }
+}
